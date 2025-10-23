@@ -1,23 +1,68 @@
-import { BookOpen, Sparkles, ArrowRight } from 'lucide-react';
+import { BookOpen, Sparkles, ArrowRight, User } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 function Hero() {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuRef = useRef();
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setMenuOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
     return (
-        <div>
-            {/* Decorative floating books */}
+        <div className="relative min-h-screen bg-gradient-to-b from-amber-50 via-rose-50 to-white py-12">
+            {/* Account dropdown - positioned at top right */}
+            <div className="absolute top-8 right-8 z-30" ref={menuRef}>
+                <button
+                    className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm px-5 py-2.5 rounded-full shadow-md border border-gray-200 hover:bg-white hover:shadow-lg transition-all"
+                    onClick={() => setMenuOpen((open) => !open)}
+                >
+                    <User className="w-4 h-4 text-amber-600" />
+                    <span className="text-sm font-medium text-gray-700">Account</span>
+                </button>
+                {menuOpen && (
+                    <div className="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+                        <Link to="/login">
+                            <button
+                                className="w-full text-left px-5 py-3 hover:bg-amber-50 text-gray-700 font-medium transition-colors"
+                                onClick={() => { setMenuOpen(false);}}
+                            >
+                                Login
+                            </button>
+                        </Link>
+                        <div className="border-t border-gray-100"></div>
+                        <Link to="/signup">
+                            <button
+                                className="w-full text-left px-5 py-3 hover:bg-rose-50 text-gray-700 font-medium transition-colors"
+                                onClick={() => { setMenuOpen(false);}}
+                            >
+                                Sign Up
+                            </button>
+                        </Link>
+                    </div>
+                )}
+        </div>
+
+            {/* Decorative floating books */ }
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-20 left-10 w-16 h-20 bg-amber-200 opacity-20 rounded transform rotate-12 animate-pulse"></div>
-                <div className="absolute top-40 right-20 w-12 h-16 bg-rose-200 opacity-20 rounded transform -rotate-6 animate-pulse delay-75"></div>
-                <div className="absolute bottom-32 left-1/4 w-14 h-18 bg-orange-200 opacity-20 rounded transform rotate-45 animate-pulse delay-150"></div>
+                <div className="absolute top-20 left-10 w-16 h-20 bg-amber-300 opacity-20 rounded transform rotate-12 animate-pulse"></div>
+                <div className="absolute top-40 right-20 w-12 h-16 bg-rose-300 opacity-20 rounded transform -rotate-6 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                <div className="absolute bottom-32 left-1/4 w-14 h-18 bg-orange-300 opacity-20 rounded transform rotate-45 animate-pulse" style={{ animationDelay: '1s' }}></div>
             </div>
 
-            <div className="container mx-auto px-6 md:relative z-10">
+            <div className="container mx-auto px-6 relative z-10 pt-16">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
                     {/* Left Content */}
                     <div className="space-y-8">
-                        <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
-                            <Sparkles className="w-4 h-4 text-amber-600" />
-                            <span className="text-sm font-medium text-gray-700">Discover Your Next Great Read</span>
-                        </div>
+
 
                         <h1 className="text-5xl md:text-7xl font-bold text-gray-900 leading-tight">
                             Where Stories
@@ -89,17 +134,19 @@ function Hero() {
 
                             {/* Secondary book cards */}
                             <div className="mt-4 grid grid-cols-2 gap-4">
-                                <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
+                                <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer">
                                     <div className="w-16 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center rounded shadow mb-2">
                                         <BookOpen className="w-12 h-12 text-white" />
                                     </div>
                                     <p className="text-sm font-semibold text-gray-800">Mystery</p>
+                                    <p className="text-xs text-gray-500 mt-1">5.2K books</p>
                                 </div>
-                                <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow ">
+                                <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer">
                                     <div className="w-16 h-20 bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center rounded shadow mb-2">
                                         <BookOpen className="w-12 h-12 text-white" />
                                     </div>
                                     <p className="text-sm font-semibold text-gray-800">Romance</p>
+                                    <p className="text-xs text-gray-500 mt-1">8.1K books</p>
                                 </div>
                             </div>
                         </div>
@@ -109,7 +156,7 @@ function Hero() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
